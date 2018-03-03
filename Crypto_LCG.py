@@ -1,3 +1,4 @@
+from __future__ import division
 from fractions import gcd
 import sys
 from collections import deque
@@ -16,18 +17,25 @@ class prng_lcg:
         return self.state
 
 
-def test():
+def test(test_count):
     gen = prng_lcg(123)  # seed = 123
-    print gen.next()
-    print gen.next()
-    print gen.next()
-    print gen.next()
-    print gen.next()
-    print gen.next()
-    print gen.next()
-    print gen.next()
-    print gen.next()
-    print gen.next()
+    x=[]
+    y=[]
+    result=[]
+    succes=0
+    all=0
+    for i in range(test_count):
+        x.append(gen.next())
+    y=x[0:int(test_count/2)]
+    del x[0:int(test_count/2)]
+    for i in range(len(x)):
+        all+=1
+        result.append(next_random_number(y))
+        y.append(result[-1])
+    for i in range(len(x)):
+        if x[i]==result[i]:
+            succes+=1
+    return succes/all
 
 
 def egcd(a, b):
@@ -73,9 +81,7 @@ def next_random_number(states):
 
 
 
-print "next number is: "
-print next_random_number([3875690559610407819, 1226388919433882694, 440292242461842414, 4302215827655865386,
-                          2150318555551974688, 1494113685247851245, 4321813711538930689, 2050631645155209881,
-                          1056173545305445])
+print "probability of succes is:  "
+print test(1000)
 
 

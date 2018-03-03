@@ -1,7 +1,7 @@
+from __future__ import division
 from ctypes import c_int, c_uint
 
-# http://www.mscs.dal.ca/~selinger/random/
-
+#work in python2
 
 def srand(seed):
     srand.r = [0 for _ in range(34)]
@@ -45,21 +45,41 @@ if __name__ == '__main__':
     assert [rand() for _ in range(10)] == [
         1505335290, 1738766719, 190686788, 260874575, 747983061, 906156498, 1502820864, 142559277,
         1261608745, 1380759627
-    ]
+]
 
 def predict_glibc_number(states):
     if len(states)<31:
-        print "zbyt malo danych aby pzrewidziec klolejne elementy"
+        print("zbyt malo danych aby przewidziec klolejne elementy")
         return
     o31=states[len(states)-31]
     o3=states[len(states)-3]
     prediction1 = (o31 + o3) % (1 << 31)
     return prediction1
 
-a=[];
+
+def test_glibc(ilosc_testow):
+    x=[]
+    succes=0
+    all=0
+    for i in range(ilosc_testow):
+        x.append(rand())
+    know_output=x[0:32]
+    del x[0:32]
+    for i in range(len(x)):
+        all+=1
+        know_output.append(predict_glibc_number(know_output))
+        if know_output[-1]==x[i]:
+            succes+=1
+        else:
+            know_output[-1]=x[i]
+    return succes/all
+
+
+a=[]
 for i in range(60):
     a.append(rand())
 
-print rand()
+print(rand())
 
-print predict_glibc_number(a)
+print(predict_glibc_number(a))
+print test_glibc(100)
